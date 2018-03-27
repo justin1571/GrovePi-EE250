@@ -10,10 +10,19 @@ ultrasonic_ranger2_topic = "ultrasonic_ranger2"
 # Lists holding the ultrasonic ranger sensor distance readings. Change the 
 # value of MAX_LIST_LENGTH depending on how many distance samples you would 
 # like to keep at any point in time.
-MAX_LIST_LENGTH = 100
+MAX_LIST_LENGTH = 10
 ranger1_dist = []
 ranger2_dist = []
 
+##########
+MAX_AVERAGE_LIST_LENGTH = 5 
+ranger1_average = []
+ranger2_average = []
+
+MAX_SLOPE_LIST = 5
+ranger1_slope = []
+ranger2_slope = []
+##########
 def ranger1_callback(client, userdata, msg):
     global ranger1_dist
     ranger1_dist.append(int(msg.payload))
