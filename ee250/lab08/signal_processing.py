@@ -57,9 +57,7 @@ if __name__ == '__main__':
 	ranger1_average = []
 	ranger2_average = []
 
-	#MAX_SLOPE_LIST = 3
-	ranger1_slope #= []
-	ranger2_slope #= []
+	
 	
 	side_Max = 60
 	
@@ -90,18 +88,18 @@ if __name__ == '__main__':
 			if((ranger1_average > 125) && (ranger2_average > 125)):
 				print("No object ") 
 				
-			else if (ranger1_average[-1:] < side_Max):
-				if(ranger1_slope > 0):
-					print("Moving left ")
-				else	
+			elif (ranger1_average[-1:] < side_Max):
+				if(ranger1_slope < 0):
+					print("Moving Right ")
+				else:	
 					print("Standing Right ")
 					
-			else if (ranger2_average[-1:] < side_Max):
-				if(ranger2_slope > 0):
-					print("Moving left ")
-				else	
+			elif (ranger2_average[-1:] < side_Max):
+				if(ranger2_slope < 0):
+					print("Moving Right ")
+				else:	
 					print("Standing Right ")
-			else
+			else:
 				print("Middle ")
 				
 		
@@ -126,8 +124,9 @@ if __name__ == '__main__':
 			print("ranger1_dist: " + str(ranger1_dist[-1:]) + ", ranger2_dist: " + 
 				str(ranger2_dist[-1:]))
 			"""
-			
-			
+		else:
+			print("test")
+			ranger1_dist[-1:]
 			
         time.sleep(0.2)
 		
