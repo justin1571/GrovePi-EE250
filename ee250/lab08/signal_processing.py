@@ -59,7 +59,7 @@ if __name__ == '__main__':
 
 	
 	
-	side_Max = 60
+	side_Max = 50
 	
 	ranger1_average.append(ranger1_dist[-1:])
 	ranger2_average.append(ranger2_dist[-1:])
@@ -72,37 +72,35 @@ if __name__ == '__main__':
         0 and 512. However, these rangers do not detect people well beyond 
         ~125cm. """
         if(len(ranger1_dist) > 3):
-			ranger1_average.append((ranger1_dist[0] + ranger1_dist[1] + ranger1_dist[2] + ranger1_dist[3]) / 3)
-			ranger1_average.append((ranger1_dist[0] + ranger1_dist[1] + ranger1_dist[2] + ranger1_dist[3]) / 3)
+			ranger1_average.append((ranger1_dist[0] + ranger1_dist[1] + ranger1_dist[2] / 3)
+			ranger1_average.append((ranger1_dist[0] + ranger1_dist[1] + ranger1_dist[2] / 3)
 			ranger1_average = ranger1_average[-MAX_AVERAGE_LIST_LENGTH:]
 			
-			ranger1_slope = ranger1_average[-2] - ranger1_average[-1]
-		
-			ranger2_average.append((ranger2_dist[0] + ranger2_dist[1] + ranger2_dist[2] + ranger2_dist[3]) / 3)
-			ranger2_average.append((ranger2_dist[0] + ranger2_dist[1] + ranger2_dist[2] + ranger2_dist[3]) / 3)
+			ranger2_average.append((ranger2_dist[0] + ranger2_dist[1] + ranger2_dist[2]/ 3)
+			ranger2_average.append((ranger2_dist[0] + ranger2_dist[1] + ranger2_dist[2]/ 3)
 			ranger2_average = ranger2_average[-MAX_AVERAGE_LIST_LENGTH:]
 			
-			ranger2_slope = ranger2_average[-2] - ranger2_average[-1]
+			
 		
-		
-			if((ranger1_average > 125) && (ranger2_average > 125)):
+			if((ranger1_average[-1] > 125) && (ranger2_average[-1] > 125)):
 				print("No object ") 
 				
-			elif (ranger1_average[-1:] < side_Max):
-				if(ranger1_slope < 0):
-					print("Moving Right ")
-				else:	
-					print("Standing Right ")
-					
-			elif (ranger2_average[-1:] < side_Max):
-				if(ranger2_slope < 0):
-					print("Moving Right ")
-				else:	
-					print("Standing Right ")
-			else:
-				print("Middle ")
 				
-		
+					
+			else:	
+				if(ranger1_average[-1] < ranger1_average[-2] or ranger2_average[-1] > ranger2_average[-2]):
+					print("Moving Left ")
+				elif (ranger1_average[-1] < side_Max):
+					print("Standing Left")
+					
+			
+				elif(ranger2_average[-1] < ranger2_average[-2] or ranger1_average[-1] > ranger1_average[-2]):
+					print("Moving Rightt ")
+				elif (ranger2_average[-1] < side_Max):	
+					print("Standing Right ")
+				else:
+					print("Middle ")
+	
         # TODO: detect movement and/or position
 		"""if(len(ranger1_dist) >= 10):
 			ranger1_slope.append(ranger1_dist[8] - ranger1_dist[9])
