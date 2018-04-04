@@ -10,18 +10,12 @@ ultrasonic_ranger2_topic = "ultrasonic_ranger2"
 # Lists holding the ultrasonic ranger sensor distance readings. Change the 
 # value of MAX_LIST_LENGTH depending on how many distance samples you would 
 # like to keep at any point in time.
-MAX_LIST_LENGTH = 10
+MAX_LIST_LENGTH = 3
 ranger1_dist = []
 ranger2_dist = []
 
 ##########
-MAX_AVERAGE_LIST_LENGTH = 10
-ranger1_average = []
-ranger2_average = []
 
-MAX_SLOPE_LIST = 10
-ranger1_slope = []
-ranger2_slope = []
 ##########
 def ranger1_callback(client, userdata, msg):
     global ranger1_dist
@@ -59,14 +53,18 @@ if __name__ == '__main__':
     client.loop_start()
 	
 	
-	MAX_AVERAGE_LIST_LENGTH = 10
+	MAX_AVERAGE_LIST_LENGTH = 3
 	ranger1_average = []
 	ranger2_average = []
 
-	MAX_SLOPE_LIST = 5
-	ranger1_slope = []
-	ranger2_slope = []
+	#MAX_SLOPE_LIST = 3
+	ranger1_slope #= []
+	ranger2_slope #= []
 	
+	side_Max = 60
+	
+	ranger1_average.append(ranger1_dist[-1:])
+	ranger2_average.append(ranger2_dist[-1:])
     while True:
         """ You have two lists, ranger1_dist and ranger2_dist, which hold a window
         of the past MAX_LIST_LENGTH samples published by ultrasonic ranger 1
@@ -75,26 +73,74 @@ if __name__ == '__main__':
         distances in centimeters to the closest object. Expect values between 
         0 and 512. However, these rangers do not detect people well beyond 
         ~125cm. """
-        
+        if(len(ranger1_dist) > 3):
+			ranger1_average.append((ranger1_dist[0] + ranger1_dist[1] + ranger1_dist[2] + ranger1_dist[3]) / 3)
+			ranger1_average.append((ranger1_dist[0] + ranger1_dist[1] + ranger1_dist[2] + ranger1_dist[3]) / 3)
+			ranger1_average = ranger1_average[-MAX_AVERAGE_LIST_LENGTH:]
+			
+			ranger1_slope = ranger1_average[-2] - ranger1_average[-1]
+		
+			ranger2_average.append((ranger2_dist[0] + ranger2_dist[1] + ranger2_dist[2] + ranger2_dist[3]) / 3)
+			ranger2_average.append((ranger2_dist[0] + ranger2_dist[1] + ranger2_dist[2] + ranger2_dist[3]) / 3)
+			ranger2_average = ranger2_average[-MAX_AVERAGE_LIST_LENGTH:]
+			
+			ranger2_slope = ranger2_average[-2] - ranger2_average[-1]
+		
+		
+			if((ranger1_average > 125) && (ranger2_average > 125)):
+				print("No object ") 
+				
+			else if (ranger1_average[-1:] < side_Max):
+				if(ranger1_slope > 0):
+					print("Moving left ")
+				else	
+					print("Standing Right ")
+					
+			else if (ranger2_average[-1:] < side_Max):
+				if(ranger2_slope > 0):
+					print("Moving left ")
+				else	
+					print("Standing Right ")
+			else
+				print("Middle ")
+				
 		
         # TODO: detect movement and/or position
-       
-		
-		ranger1_slope.append(int(ranger1_dist[9]) - int(ranger1_dist[8]))
-		ranger1_slope = ranger1_slope[-MAX_SLOPE_LIST:]
-		
-		ranger2_slope.append(int(ranger2_dist[9]) - int(ranger2_dist[8]))
-		ranger2_slope = ranger2_slope[-MAX_SLOPE_LIST:]
-		
-		ranger1_average.append((int(ranger1_slope[0])+int(ranger1_slope[1])+int(ranger1_slope[2])+int(ranger1_slope[3])+ int(ranger1_slope[4]))/5)
-		ranger1_average = ranger1_average[-MAX_AVERAGE_LIST_LENGTH:]
-		
-		ranger2_average.append((int(ranger2_slope[0])+int(ranger2_slope[1])+int(ranger2_slope[2])+int(ranger2_slope[3])+ int(ranger2_slope[4]))/5)
-		#truncate list to only have the last MAX_LIST_LENGTH values
-		ranger2_average = ranger2_average[-MAX_AVERAGE_LIST_LENGTH:]
+		"""if(len(ranger1_dist) >= 10):
+			ranger1_slope.append(ranger1_dist[8] - ranger1_dist[9])
+			ranger1_slope = ranger1_slope[-MAX_SLOPE_LIST:]
 			
-        print("ranger1_dist: " + str(ranger1_dist[-1:]) + ", ranger2_dist: " + 
-            str(ranger2_dist[-1:]) + ", ranger1 slope: " + str(ranger1_slope[-1:]) + ", ranger2 slope: " + str(ranger2_slope[-1:]) +
-			", ranger1_average: " + str(ranger1_average[-1:]) + ", ranger1_average: " + str(ranger1_average[-1:])
-        
+			ranger2_slope.append(int(ranger2_dist[8]) - int(ranger2_dist[9]))
+			ranger2_slope = ranger2_slope[-MAX_SLOPE_LIST:]
+			
+			ranger1_average.append((int(ranger1_slope[0])+int(ranger1_slope[1])+int(ranger1_slope[2])+int(ranger1_slope[3])+ int(ranger1_slope[4]))/5)
+			ranger1_average = ranger1_average[-MAX_AVERAGE_LIST_LENGTH:]
+			
+			ranger2_average.append((int(ranger2_slope[0])+int(ranger2_slope[1])+int(ranger2_slope[2])+int(ranger2_slope[3])+ int(ranger2_slope[4]))/5)
+			ranger2_average = ranger2_average[-MAX_AVERAGE_LIST_LENGTH:]
+				
+			print("ranger1_dist: " + str(ranger1_dist[-1:]) + ", ranger2_dist: " + 
+				str(ranger2_dist[-1:]) + ", ranger1 slope: " + str(ranger1_slope[-1:]) + ", ranger2 slope: " + str(ranger2_slope[-1:]) +
+				", ranger1_average: " + str(ranger1_average[-1:]) + ", ranger1_average: " + str(ranger1_average[-1:])
+		else		
+			print("ranger1_dist: " + str(ranger1_dist[-1:]) + ", ranger2_dist: " + 
+				str(ranger2_dist[-1:]))
+			"""
+			
+			
+			
         time.sleep(0.2)
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
